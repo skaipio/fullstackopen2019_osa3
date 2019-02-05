@@ -27,6 +27,11 @@ app.get('/api/persons', (req, res) => {
   res.json(persons)
 })
 
+app.get('/info', (req, res) => {
+  const personInfo = `Puhelinluettelossa ${persons.length} henkilön tiedot`
+  res.send(`<p>${personInfo}</p><p>${Date()}</p>`)
+})
+
 app.get('/notes/:id', (request, response) => {
   const id = Number(request.params.id)
   const note = notes.find(note => note.id === id)
