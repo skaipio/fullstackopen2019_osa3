@@ -23,20 +23,20 @@ let persons = [
     id: 4
   },
 ]
-app.get('/api/persons', (req, res) => {
-  res.json(persons)
+app.get('/api/persons', (request, response) => {
+  response.json(persons)
 })
 
-app.get('/info', (req, res) => {
+app.get('/info', (request, response) => {
   const personInfo = `Puhelinluettelossa ${persons.length} henkilön tiedot`
-  res.send(`<p>${personInfo}</p><p>${Date()}</p>`)
+  response.send(`<p>${personInfo}</p><p>${Date()}</p>`)
 })
 
-app.get('/notes/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
-  const note = notes.find(note => note.id === id)
-  if (note) {
-    response.json(note)
+  const person = persons.find(person => person.id === id)
+  if (person) {
+    response.json(person)
   } else {
     response.status(404).end()
   }
