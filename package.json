@@ -11,6 +11,7 @@
   "author": "Senni Kaipio",
   "license": "MIT",
   "devDependencies": {
+    "morgan": "^1.9.1",
     "nodemon": "^1.18.9"
   },
   "dependencies": {
