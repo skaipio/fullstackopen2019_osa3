@@ -46,8 +46,10 @@ app.get('/api/persons', (request, response, next) => {
 })
 
 app.get('/info', (request, response) => {
-  const personInfo = `Puhelinluettelossa ${persons.length} henkilön tiedot`
-  response.send(`<p>${personInfo}</p><p>${Date()}</p>`)
+  Person.count({}).then(count => {
+    const personInfo = `Puhelinluettelossa ${count} henkilön tiedot`
+    response.send(`<p>${personInfo}</p><p>${Date()}</p>`)
+  }).catch(error => next(error))
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -82,17 +84,6 @@ app.post('/api/persons', (request, response, next) => {
   const person = new Person({
     name, number
   })
-
-  /*
-  const personExists = persons.find(person =>
-    person.name === body.name)
-
-  if (personExists) {
-    return response.status(400).json({ 
-      error: 'name must be unique' 
-    })
-  }
-  */
 
   person.save().then(person => {
     response.json(person)
