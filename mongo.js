@@ -17,7 +17,7 @@ if (process.argv.length === 3) {
   Person.find({}).then(result => {
     console.log('puhelinluettelo')
 
-    result.forEach(({name, number}) => {
+    result.forEach(({ name, number }) => {
       console.log(name, number)
     })
 
@@ -34,7 +34,7 @@ const person = new Person({
   number
 })
 
-person.save().then(({name, number}) => {
-  console.log('lisätään', name, 'numero', number, 'luetteloon')  
+person.save().then(({ name, number }) => {
+  console.log('lisätään', name, 'numero', number, 'luetteloon')
   mongoose.connection.close()
 })

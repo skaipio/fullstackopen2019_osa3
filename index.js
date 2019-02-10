@@ -18,36 +18,13 @@ morgan.token('body', function getBody (req) {
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-let persons = [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-    id: 1
-  },
-  {
-    name: "Martti Tienari",
-    number: "040-123456",
-    id: 2
-  },
-  {
-    name: "Arto Järvinen",
-    number: "040-123456",
-    id: 3
-  },
-  {
-    name: "Lea Kutvonen",
-    number: "040-123456",
-    id: 4
-  },
-]
-
 app.get('/api/persons', (request, response, next) => {
   Person.find({}).then(persons => {
     response.json(persons)
   }).catch(error => next(error))
 })
 
-app.get('/info', (request, response) => {
+app.get('/info', (request, response, next) => {
   Person.count({}).then(count => {
     const personInfo = `Puhelinluettelossa ${count} henkilön tiedot`
     response.send(`<p>${personInfo}</p><p>${Date()}</p>`)
@@ -59,27 +36,23 @@ app.get('/api/persons/:id', (request, response, next) => {
     if (person) {
       response.json(person)
     } else {
-      response.status(404).end()      
+      response.status(404).end()
     }
   }).catch(error => next(error))
 })
 
-const generateId = () => {
-  return Math.floor(Math.random() * 999999)
-}
-
 app.post('/api/persons', (request, response, next) => {
-  const {name, number} = request.body
+  const { name, number } = request.body
 
   if (name === undefined) {
-    return response.status(400).json({ 
-      error: 'name missing' 
+    return response.status(400).json({
+      error: 'name missing'
     })
   }
 
   if (number === undefined) {
-    return response.status(400).json({ 
-      error: 'number missing' 
+    return response.status(400).json({
+      error: 'number missing'
     })
   }
 
@@ -93,17 +66,17 @@ app.post('/api/persons', (request, response, next) => {
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-  const {name, number} = request.body
+  const { name, number } = request.body
 
   if (name === undefined) {
-    return response.status(400).json({ 
-      error: 'name missing' 
+    return response.status(400).json({
+      error: 'name missing'
     })
   }
 
   if (number === undefined) {
-    return response.status(400).json({ 
-      error: 'number missing' 
+    return response.status(400).json({
+      error: 'number missing'
     })
   }
 
@@ -116,7 +89,7 @@ app.put('/api/persons/:id', (request, response, next) => {
       if (updatedPerson) {
         response.json(updatedPerson.toJSON())
       } else {
-        response.status(404).end()      
+        response.status(404).end()
       }
     })
     .catch(error => next(error))
@@ -125,16 +98,16 @@ app.put('/api/persons/:id', (request, response, next) => {
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id).then(result => {
     console.log('deleted', result)
-    response.status(204).end();
+    response.status(204).end()
   }).catch(error => next(error))
-});
+})
 
 app.use(express.static('build'))
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
-  if (error.name === 'CastError' && error.kind == 'ObjectId') {
+  if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' })
   }
 
