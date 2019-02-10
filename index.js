@@ -99,6 +99,36 @@ app.post('/api/persons', (request, response, next) => {
   }).catch(error => next(error))
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const {name, number} = request.body
+
+  if (name === undefined) {
+    return response.status(400).json({ 
+      error: 'name missing' 
+    })
+  }
+
+  if (number === undefined) {
+    return response.status(400).json({ 
+      error: 'number missing' 
+    })
+  }
+
+  const person = {
+    name, number
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new:true })
+    .then(updatedPerson => {
+      if (updatedPerson) {
+        response.json(updatedPerson.toJSON())
+      } else {
+        response.status(404).end()      
+      }
+    })
+    .catch(error => next(error))
+})
+
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id).then(result => {
     console.log('deleted', result)
